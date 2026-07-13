@@ -6,13 +6,21 @@
 # ║    1. Rust + wasm32 target:                                              ║
 # ║         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh  ║
 # ║         rustup target add wasm32-unknown-unknown                         ║
-# ║    2. Stellar CLI:                                                       ║
-# ║         cargo install --locked stellar-cli --features opt                ║
-# ║    3. A funded testnet keypair — fund with friendbot:                    ║
-# ║         https://friendbot.stellar.org/?addr=<YOUR_PUBLIC_KEY>           ║
+# ║    2. Stellar CLI v27+:                                                  ║
+# ║         # Pre-built binary (fastest):                                    ║
+# ║         curl -sSL https://github.com/stellar/stellar-cli/releases/       ║
+# ║           download/v27.0.0/stellar-cli-27.0.0-x86_64-unknown-linux-gnu  ║
+# ║           .tar.gz | tar xz && sudo mv stellar /usr/local/bin/            ║
+# ║         # or via cargo:                                                  ║
+# ║         cargo install --locked stellar-cli                               ║
 # ╚══════════════════════════════════════════════════════════════════════════╝
 
 set -euo pipefail
+
+# ── Locate project root ──────────────────────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
 
 NETWORK="testnet"
 RPC_URL="https://soroban-testnet.stellar.org"
@@ -35,7 +43,7 @@ stellar network add \
 IDENTITY="token-swap-deployer"
 echo ""
 echo "▶ Checking identity '$IDENTITY'…"
-if ! stellar keys show "$IDENTITY" &>/dev/null; then
+if ! stellar keys address "$IDENTITY" &>/dev/null; then
   echo "  Generating new identity…"
   stellar keys generate --network "$NETWORK" "$IDENTITY"
 fi
@@ -46,60 +54,52 @@ echo "  Deployer: $DEPLOYER_ADDRESS"
 # ── 3. Fund via friendbot ────────────────────────────────────────────────────
 echo ""
 echo "▶ Funding deployer via friendbot…"
-curl -s "https://friendbot.stellar.org/?addr=${DEPLOYER_ADDRESS}" | python3 -c "import sys,json; r=json.load(sys.stdin); print('  Funded:', r.get('hash','already funded'))" 2>/dev/null || echo "  (Already funded or friendbot unavailable)"
+FUND_RESULT=$(curl -s "https://friendbot.stellar.org/?addr=${DEPLOYER_ADDRESS}")
+TX_HASH=$(echo "$FUND_RESULT" | python3 -c "import sys,json; r=json.load(sys.stdin); print(r.get('hash','already_funded'))" 2>/dev/null || echo "already_funded")
+echo "  Fund tx: $TX_HASH"
 
-# ── 4. Build the contract ────────────────────────────────────────────────────
+# ── 4. Build the contract using stellar contract build ───────────────────────
 echo ""
-echo "▶ Building contract…"
-cd "$(dirname "$0")"
-cargo build --manifest-path contracts/token_swap/Cargo.toml \
-  --target wasm32-unknown-unknown \
-  --release
+echo "▶ Building contract (stellar contract build)…"
+stellar contract build \
+  --manifest-path contracts/token_swap/Cargo.toml \
+  --package token-swap
 
 WASM_PATH="contracts/token_swap/target/wasm32-unknown-unknown/release/token_swap.wasm"
 if [ ! -f "$WASM_PATH" ]; then
+  # fallback: cargo may write to workspace target
   WASM_PATH="target/wasm32-unknown-unknown/release/token_swap.wasm"
 fi
 
-echo "  WASM: $WASM_PATH"
-
-# ── 5. Optimize with wasm-opt (optional) ────────────────────────────────────
-if command -v stellar &>/dev/null; then
-  echo ""
-  echo "▶ Optimizing WASM…"
-  stellar contract optimize --wasm "$WASM_PATH" 2>/dev/null || echo "  (Skipping optimization)"
+if [ ! -f "$WASM_PATH" ]; then
+  echo "ERROR: WASM not found. Searched:"
+  echo "  contracts/token_swap/target/wasm32-unknown-unknown/release/token_swap.wasm"
+  echo "  target/wasm32-unknown-unknown/release/token_swap.wasm"
+  exit 1
 fi
+echo "  WASM: $WASM_PATH ($(du -sh "$WASM_PATH" | cut -f1))"
 
-# ── 6. Upload WASM ───────────────────────────────────────────────────────────
+# ── 5. Deploy contract (upload + instantiate in one step) ────────────────────
 echo ""
-echo "▶ Uploading WASM to $NETWORK…"
-WASM_HASH=$(stellar contract upload \
-  --network "$NETWORK" \
-  --source "$IDENTITY" \
-  --wasm "$WASM_PATH")
-echo "  WASM hash: $WASM_HASH"
-
-# ── 7. Deploy contract instance ──────────────────────────────────────────────
-echo ""
-echo "▶ Deploying contract instance…"
+echo "▶ Deploying contract to $NETWORK…"
 CONTRACT_ID=$(stellar contract deploy \
   --network "$NETWORK" \
   --source "$IDENTITY" \
-  --wasm-hash "$WASM_HASH")
+  --wasm "$WASM_PATH")
 echo "  Contract ID: $CONTRACT_ID"
 
-# ── 8. Initialize the contract ───────────────────────────────────────────────
+# ── 6. Initialize the contract ───────────────────────────────────────────────
 echo ""
 echo "▶ Initializing contract (admin = deployer)…"
-stellar contract invoke \
+INIT_TX=$(stellar contract invoke \
   --network "$NETWORK" \
   --source "$IDENTITY" \
   --id "$CONTRACT_ID" \
   -- initialize \
-  --admin "$DEPLOYER_ADDRESS"
-echo "  ✅ Initialized"
+  --admin "$DEPLOYER_ADDRESS")
+echo "  ✅ Initialized (tx: $INIT_TX)"
 
-# ── 9. Verify — read total swaps ─────────────────────────────────────────────
+# ── 7. Verify — read total swaps ─────────────────────────────────────────────
 echo ""
 echo "▶ Verifying contract…"
 TOTAL=$(stellar contract invoke \
@@ -109,14 +109,16 @@ TOTAL=$(stellar contract invoke \
   -- get_total_swaps)
 echo "  Total swaps: $TOTAL"
 
-# ── 10. Update .env.local ────────────────────────────────────────────────────
+# ── 8. Update .env.local ────────────────────────────────────────────────────
 echo ""
 echo "▶ Saving contract address to .env.local…"
 if [ -f .env.local ]; then
-  sed -i.bak "/NEXT_PUBLIC_CONTRACT_ADDRESS/d" .env.local
+  # Remove existing entry
+  grep -v "NEXT_PUBLIC_CONTRACT_ADDRESS" .env.local > .env.local.tmp || true
+  mv .env.local.tmp .env.local
 fi
 echo "NEXT_PUBLIC_CONTRACT_ADDRESS=$CONTRACT_ID" >> .env.local
-echo "  Saved."
+echo "  Saved to .env.local"
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 echo ""
@@ -128,6 +130,6 @@ echo "   Deployer    : $DEPLOYER_ADDRESS"
 echo "   Network     : $NETWORK"
 echo "   Explorer    : https://stellar.expert/explorer/testnet/contract/$CONTRACT_ID"
 echo ""
-echo "   Add to your .env.local:"
-echo "   NEXT_PUBLIC_CONTRACT_ADDRESS=$CONTRACT_ID"
+echo "   .env.local updated. Now run:"
+echo "   npm run dev"
 echo "═══════════════════════════════════════════"
