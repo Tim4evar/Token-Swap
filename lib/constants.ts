@@ -10,7 +10,7 @@ export const STELLAR_NETWORK = {
 
 // Replace with your deployed contract address
 export const CONTRACT_ADDRESS =
-  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCN3';
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? 'CA5MMUISCAHQTLQDVNMSRHFFF6CRAKGAMFHYM3TYMYMJG42XIYAIZM45';
 
 // Well-known testnet tokens — add more as needed
 export const TOKENS: TokenInfo[] = [

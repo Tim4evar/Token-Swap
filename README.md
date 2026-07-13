@@ -118,10 +118,10 @@ When you click **Connect Wallet**, a modal appears showing all installed wallets
 
 | Field | Value |
 |---|---|
-| **Contract Address** | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCN3` |
+| **Contract Address** | `CA5MMUISCAHQTLQDVNMSRHFFF6CRAKGAMFHYM3TYMYMJG42XIYAIZM45` |
 | **Network** | Stellar Testnet |
-| **Language** | Rust / Soroban SDK 21.7.6 |
-| **Explorer** | [stellar.expert/explorer/testnet/contract/…](https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCN3) |
+| **Language** | Rust / Soroban SDK 27.0.0 |
+| **Explorer** | [stellar.expert/explorer/testnet/contract/CA5MMUISCAHQTLQDVNMSRHFFF6CRAKGAMFHYM3TYMYMJG42XIYAIZM45](https://stellar.expert/explorer/testnet/contract/CA5MMUISCAHQTLQDVNMSRHFFF6CRAKGAMFHYM3TYMYMJG42XIYAIZM45) |
 
 > ⚠️ Replace the placeholder contract address above with your deployed address after running `scripts/deploy.sh`.
 
@@ -138,12 +138,18 @@ When you click **Connect Wallet**, a modal appears showing all installed wallets
 
 ## 🔗 Transaction Hash
 
-> 📝 _After deploying and executing a swap, paste a verified transaction hash here:_
+Contract was deployed and initialized on Stellar Testnet. Verified transactions:
 
-```
-Transaction hash: [PASTE_HASH_HERE]
-Verify at: https://stellar.expert/explorer/testnet/tx/[PASTE_HASH_HERE]
-```
+| Step | Transaction Hash |
+|---|---|
+| WASM Upload | `cd37b9e5d74123688d1687046bc658ebc1978756394e9c5966f006b406257045` |
+| Contract Deploy | `e98d3861f8bb274167418a773fc18e8e064bbe835c8339f3b212b9789c9a4e16` |
+| Initialize | `87ea1339fe4295a0728fd09be9fb9bf6d6eaf9b0f4ed4f83420ea947a6126146` |
+
+Verify at:
+- [WASM Upload tx](https://stellar.expert/explorer/testnet/tx/cd37b9e5d74123688d1687046bc658ebc1978756394e9c5966f006b406257045)
+- [Deploy tx](https://stellar.expert/explorer/testnet/tx/e98d3861f8bb274167418a773fc18e8e064bbe835c8339f3b212b9789c9a4e16)
+- [Initialize tx](https://stellar.expert/explorer/testnet/tx/87ea1339fe4295a0728fd09be9fb9bf6d6eaf9b0f4ed4f83420ea947a6126146)
 
 ---
 
