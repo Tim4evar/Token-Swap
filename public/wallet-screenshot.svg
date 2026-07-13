@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- Dark background (page) -->
+  <rect width="800" height="500" fill="#030712"/>
+
+  <!-- Nav bar -->
+  <rect width="800" height="60" fill="#030712"/>
+  <rect x="0" y="59" width="800" height="1" fill="#1f2937"/>
+  <text x="22" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="20" font-weight="700" fill="#fff">🌟 StellarSwap</text>
+  <text x="128" y="47" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#eab308">Testnet</text>
+  <!-- Connect button in nav (greyed, modal is open) -->
+  <rect x="660" y="18" width="118" height="36" rx="18" fill="#4338ca" opacity="0.4"/>
+  <text x="719" y="41" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="600" fill="#a5b4fc" text-anchor="middle">Connect Wallet</text>
+
+  <!-- Dim overlay -->
+  <rect width="800" height="500" fill="#000" opacity="0.6"/>
+
+  <!-- Modal card -->
+  <rect x="220" y="62" width="360" height="376" rx="20" fill="#111827" filter="url(#shadow)"/>
+  <rect x="220" y="62" width="360" height="376" rx="20" fill="none" stroke="#374151" stroke-width="1"/>
+
+  <!-- Modal header -->
+  <text x="400" y="104" font-family="ui-sans-serif,system-ui,sans-serif" font-size="17" font-weight="700" fill="#f9fafb" text-anchor="middle">Connect Wallet</text>
+  <text x="400" y="123" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9ca3af" text-anchor="middle">Choose a wallet to connect to StellarSwap</text>
+  <!-- Close X -->
+  <circle cx="557" cy="88" r="13" fill="#1f2937"/>
+  <text x="557" y="93" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#9ca3af" text-anchor="middle">✕</text>
+  <!-- Divider -->
+  <rect x="236" y="136" width="328" height="1" fill="#1f2937"/>
+
+  <!-- ── Freighter row (highlighted / selected) ── -->
+  <rect x="236" y="148" width="328" height="64" rx="14" fill="#312e81" opacity="0.5"/>
+  <rect x="236" y="148" width="328" height="64" rx="14" fill="none" stroke="#6366f1" stroke-width="1.5"/>
+  <!-- icon -->
+  <circle cx="270" cy="180" r="20" fill="#4f46e5" opacity="0.3"/>
+  <circle cx="270" cy="180" r="20" fill="none" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="270" y="186" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#a5b4fc" text-anchor="middle">F</text>
+  <!-- label -->
+  <text x="302" y="174" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#f9fafb">Freighter</text>
+  <text x="302" y="192" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#9ca3af">Chrome / Firefox extension</text>
+  <!-- installed badge -->
+  <rect x="476" y="169" width="72" height="22" rx="11" fill="#14532d"/>
+  <circle cx="489" cy="180" r="4" fill="#4ade80"/>
+  <text x="520" y="184" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" font-weight="600" fill="#4ade80" text-anchor="middle">Installed</text>
+
+  <!-- ── xBull row ── -->
+  <rect x="236" y="224" width="328" height="64" rx="14" fill="#1f2937" opacity="0.7"/>
+  <rect x="236" y="224" width="328" height="64" rx="14" fill="none" stroke="#374151" stroke-width="1"/>
+  <circle cx="270" cy="256" r="20" fill="#0284c7" opacity="0.15"/>
+  <circle cx="270" cy="256" r="20" fill="none" stroke="#0ea5e9" stroke-width="1"/>
+  <text x="270" y="262" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#38bdf8" text-anchor="middle">X</text>
+  <text x="302" y="250" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#f9fafb">xBull</text>
+  <text x="302" y="268" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#9ca3af">Chrome extension</text>
+  <rect x="476" y="245" width="72" height="22" rx="11" fill="#1f2937"/>
+  <rect x="476" y="245" width="72" height="22" rx="11" fill="none" stroke="#374151" stroke-width="1"/>
+  <text x="512" y="260" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">Get wallet</text>
+
+  <!-- ── Hana row ── -->
+  <rect x="236" y="300" width="328" height="64" rx="14" fill="#1f2937" opacity="0.7"/>
+  <rect x="236" y="300" width="328" height="64" rx="14" fill="none" stroke="#374151" stroke-width="1"/>
+  <circle cx="270" cy="332" r="20" fill="#d97706" opacity="0.15"/>
+  <circle cx="270" cy="332" r="20" fill="none" stroke="#f59e0b" stroke-width="1"/>
+  <text x="270" y="338" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#fbbf24" text-anchor="middle">H</text>
+  <text x="302" y="326" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#f9fafb">Hana</text>
+  <text x="302" y="344" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#9ca3af">Chrome extension</text>
+  <rect x="476" y="321" width="72" height="22" rx="11" fill="#1f2937"/>
+  <rect x="476" y="321" width="72" height="22" rx="11" fill="none" stroke="#374151" stroke-width="1"/>
+  <text x="512" y="336" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">Get wallet</text>
+
+  <!-- ── LOBSTR row ── -->
+  <rect x="236" y="376" width="328" height="46" rx="14" fill="#1f2937" opacity="0.7"/>
+  <rect x="236" y="376" width="328" height="46" rx="14" fill="none" stroke="#374151" stroke-width="1"/>
+  <circle cx="270" cy="399" r="16" fill="#be185d" opacity="0.15"/>
+  <circle cx="270" cy="399" r="16" fill="none" stroke="#ec4899" stroke-width="1"/>
+  <text x="270" y="405" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#f472b6" text-anchor="middle">L</text>
+  <text x="302" y="395" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#f9fafb">LOBSTR</text>
+  <text x="302" y="413" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#9ca3af">Mobile + Web</text>
+  <rect x="476" y="388" width="72" height="22" rx="11" fill="#1f2937"/>
+  <rect x="476" y="388" width="72" height="22" rx="11" fill="none" stroke="#374151" stroke-width="1"/>
+  <text x="512" y="403" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#6b7280" text-anchor="middle">Get wallet</text>
+
+  <!-- footer caption -->
+  <text x="400" y="480" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#4b5563" text-anchor="middle">StellarSwap wallet selection modal — Freighter, xBull, Hana, LOBSTR via StellarWalletsKit</text>
+</svg>
